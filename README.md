@@ -32,9 +32,9 @@ graph TD
         E[user-service]
     end
     subgraph Databases
-        F[order-db (PostgreSQL)]
-        G[payment-db (PostgreSQL)]
-        H[user-db (PostgreSQL)]
+        F[order-db: PostgreSQL]
+        G[payment-db: PostgreSQL]
+        H[user-db: PostgreSQL]
     end
 
     B --> C
@@ -47,7 +47,7 @@ graph TD
     D -->|Service Discovery| A
     E -->|Service Discovery| A
     B -->|Service Discovery| A
-```
+
 
 ---
 

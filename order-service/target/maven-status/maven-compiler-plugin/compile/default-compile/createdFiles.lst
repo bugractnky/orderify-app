@@ -1,0 +1,6 @@
+com/orderify/orderservice/model/Order.class
+com/orderify/orderservice/OrderServiceApplication.class
+com/orderify/orderservice/config/RabbitMQConfig.class
+com/orderify/orderservice/messaging/OrderProducer.class
+com/orderify/orderservice/OrderRepository.class
+com/orderify/orderservice/controller/OrderController.class

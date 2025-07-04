@@ -1,0 +1,106 @@
+version: '3.8'
+services:
+  order-db:
+    image: postgres:15
+    container_name: order-db
+    environment:
+      POSTGRES_DB: order_db
+      POSTGRES_USER: order_user
+      POSTGRES_PASSWORD: order_pass
+    ports:
+      - "5433:5432"
+    volumes:
+      - order-db-data:/var/lib/postgresql/data
+
+  payment-db:
+    image: postgres:15
+    container_name: payment-db
+    environment:
+      POSTGRES_DB: payment_db
+      POSTGRES_USER: payment_user
+      POSTGRES_PASSWORD: payment_pass
+    ports:
+      - "5434:5432"
+    volumes:
+      - payment-db-data:/var/lib/postgresql/data
+
+  order-service:
+    build: ./order-service
+    image: order-service:latest
+    ports:
+      - "8081:8080"
+    depends_on:
+      - payment-service
+      - discovery-service
+      - order-db
+    restart: unless-stopped
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://order-db:5432/order_db
+      - SPRING_DATASOURCE_USERNAME=order_user
+      - SPRING_DATASOURCE_PASSWORD=order_pass
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://discovery-service:8761/eureka/
+
+  payment-service:
+    build: ./payment-service
+    image: payment-service:latest
+    ports:
+      - "8082:8080"
+    depends_on:
+      - discovery-service
+      - payment-db
+    restart: unless-stopped
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://payment-db:5432/payment_db
+      - SPRING_DATASOURCE_USERNAME=payment_user
+      - SPRING_DATASOURCE_PASSWORD=payment_pass
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://discovery-service:8761/eureka/
+
+  discovery-service:
+    build: ./discovery-service
+    image: discovery-service:latest
+    ports:
+      - "8761:8761"
+    restart: unless-stopped
+
+  gateway-service:
+    build: ./gateway-service
+    image: gateway-service:latest
+    ports:
+      - "8080:8080"
+    depends_on:
+      - discovery-service
+    restart: unless-stopped
+    environment:
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://discovery-service:8761/eureka/
+
+  user-db:
+    image: postgres:15
+    container_name: user-db
+    environment:
+      POSTGRES_DB: user_db
+      POSTGRES_USER: user_user
+      POSTGRES_PASSWORD: user_pass
+    ports:
+      - "5435:5432"
+    volumes:
+      - user-db-data:/var/lib/postgresql/data
+
+  user-service:
+    build: ./user-service
+    image: user-service:latest
+    ports:
+      - "8084:8080"
+    depends_on:
+      - user-db
+      - discovery-service
+    restart: unless-stopped
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://user-db:5432/user_db
+      - SPRING_DATASOURCE_USERNAME=user_user
+      - SPRING_DATASOURCE_PASSWORD=user_pass
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://discovery-service:8761/eureka/
+
+volumes:
+  order-db-data:
+  payment-db-data:
+  user-db-data:

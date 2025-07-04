@@ -1,0 +1,6 @@
+/home/bugra/Desktop/orderify-app/order-service/src/main/java/com/orderify/orderservice/model/Order.java
+/home/bugra/Desktop/orderify-app/order-service/src/main/java/com/orderify/orderservice/config/RabbitMQConfig.java
+/home/bugra/Desktop/orderify-app/order-service/src/main/java/com/orderify/orderservice/OrderRepository.java
+/home/bugra/Desktop/orderify-app/order-service/src/main/java/com/orderify/orderservice/messaging/OrderProducer.java
+/home/bugra/Desktop/orderify-app/order-service/src/main/java/com/orderify/orderservice/controller/OrderController.java
+/home/bugra/Desktop/orderify-app/order-service/src/main/java/com/orderify/orderservice/OrderServiceApplication.java
